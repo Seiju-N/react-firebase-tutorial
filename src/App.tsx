@@ -1,10 +1,13 @@
-import { AuthProvider } from "@/contexts/authContext";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { SignUp } from "@/pages/signUp";
+
+import { RequireAuth } from "./components/requireAuth";
+import { Dashboard } from "./pages/dashboard";
 import { Home } from "./pages/home";
 import { Login } from "./pages/login";
-import { Dashboard } from "./pages/dashboard";
-import { RequireAuth } from "./components/requireAuth";
+
+import { AuthProvider } from "@/contexts/authContext";
+import { SignUp } from "@/pages/signUp";
+
 
 export const App = () => {
   return (

@@ -1,6 +1,7 @@
-import { useAuth } from "@/contexts/useAuth";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+
+import { useAuth } from "@/contexts/useAuth";
 
 type Inputs = {
   email: string;

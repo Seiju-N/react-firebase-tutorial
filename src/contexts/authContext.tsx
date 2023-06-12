@@ -1,6 +1,7 @@
-import React, { useState, useEffect, createContext, ReactNode } from "react";
-import { auth } from "../firebase";
 import firebase from "firebase/compat/app";
+import React, { useState, useEffect, createContext, ReactNode } from "react";
+
+import { auth } from "../firebase";
 
 export type AuthContextType = {
   currentUser: firebase.User | null;
@@ -12,6 +13,7 @@ export type AuthContextType = {
     email: string,
     password: string
   ) => Promise<firebase.auth.UserCredential>;
+  logout: () => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -31,10 +33,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return auth.signInWithEmailAndPassword(email, password);
   };
 
+  const logout = () => {
+    return auth.signOut();
+  };
+
   const value: AuthContextType = {
     currentUser,
     signUp,
     login,
+    logout,
   };
 
   useEffect(() => {

@@ -1,7 +1,9 @@
+import { SignUp } from "./authentication/SignUp";
+
 export const App = () => {
   return (
     <>
-      <div className="App">Hello World!</div>
+      <SignUp />
     </>
   );
 };

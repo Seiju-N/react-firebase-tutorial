@@ -8,6 +8,10 @@ export type AuthContextType = {
     email: string,
     password: string
   ) => Promise<firebase.auth.UserCredential>;
+  login: (
+    email: string,
+    password: string
+  ) => Promise<firebase.auth.UserCredential>;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -23,9 +27,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return auth.createUserWithEmailAndPassword(email, password);
   };
 
+  const login = (email: string, password: string) => {
+    return auth.signInWithEmailAndPassword(email, password);
+  };
+
   const value: AuthContextType = {
     currentUser,
     signUp,
+    login,
   };
 
   useEffect(() => {

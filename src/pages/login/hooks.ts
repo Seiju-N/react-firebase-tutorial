@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "@/contexts/useAuth";
 
@@ -22,6 +23,7 @@ export const useHooks = () => {
   };
 
   const auth = useAuth();
+  const navigate = useNavigate();
   const [message, setMessage] = useState<string>("");
 
   if (!auth) {
@@ -48,6 +50,7 @@ export const useHooks = () => {
     try {
       await login(data.email, data.password);
       setMessage("ログインに成功しました");
+      navigate("/dashboard");
     } catch (e) {
       if (e instanceof Error) {
         console.log(e);

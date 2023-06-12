@@ -16,7 +16,18 @@ export type AuthContextType = {
   logout: () => Promise<void>;
 };
 
-export const AuthContext = createContext<AuthContextType | null>(null);
+export const AuthContext = createContext<AuthContextType>({
+  currentUser: null,
+  signUp: async () => {
+    throw new Error("signUp not implemented");
+  },
+  login: async () => {
+    throw new Error("login not implemented");
+  },
+  logout: async () => {
+    throw new Error("logout not implemented");
+  },
+});
 
 type AuthProviderProps = {
   children: ReactNode;

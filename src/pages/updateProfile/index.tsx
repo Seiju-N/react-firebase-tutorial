@@ -12,6 +12,21 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "@/contexts/useAuth";
+import validation, { resolver } from "@/utils/validation";
+
+const schema = validation.object().shape({
+  email: validation
+    .string()
+    .required("Email is required")
+    .email("Email is not valid"),
+  password: validation
+    .string()
+    .min(6, "Password must be at least 6 characters"),
+  passwordConfirm: validation
+    .string()
+    .oneOf([validation.ref("password")], "Passwords must match")
+    .required("Password confirmation is required"),
+});
 
 export const UpdateProfile = () => {
   const { currentUser, updatePassword, updateEmail } = useAuth();
@@ -19,10 +34,15 @@ export const UpdateProfile = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const [isError, setIsError] = useState(false);
   const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [emailValified, setEmailValified] = useState<boolean | undefined>(
+    false
+  );
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, setValue } = useForm({
+    resolver: resolver(schema),
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,12 +56,20 @@ export const UpdateProfile = () => {
     if (email !== currentUser?.email && password) {
       setIsButtonDisabled(true);
     }
-  }, [email, password, passwordConfirm, currentUser?.email]);
+    setValue("email", email);
+    setEmailValified(currentUser?.emailVerified);
+  }, [
+    email,
+    password,
+    passwordConfirm,
+    currentUser?.email,
+    setValue,
+    currentUser?.emailVerified,
+  ]);
 
   const handleUpdateProfile: SubmitHandler<FieldValues> = async (data) => {
     setEmail(data.email);
     setPassword(data.password);
-    setOpen(true);
 
     //処理の初期化
     const promises = [];
@@ -58,8 +86,9 @@ export const UpdateProfile = () => {
 
     Promise.all(promises)
       .then(() => {
-        setIsError(false);
         setIsButtonDisabled(false);
+        setOpen(true);
+        setMessage("プロフィールを更新しました");
         setTimeout(function () {
           console.log("リダレクト処理");
           navigate("/dashboard");
@@ -67,8 +96,9 @@ export const UpdateProfile = () => {
       })
       .catch((e) => {
         console.log(e);
-        setIsError(true);
         setIsButtonDisabled(false);
+        setOpen(true);
+        setMessage("プロフィールの更新に失敗しました");
       })
       .finally(() => {
         setIsButtonDisabled(false);
@@ -108,21 +138,25 @@ export const UpdateProfile = () => {
         onSubmit={handleSubmit(handleUpdateProfile)}
       >
         <Paper sx={{ padding: 16 }}>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} />
+          <Snackbar
+            open={open}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            message={message}
+          />
           <TextField
-            error={isError}
             fullWidth
             id="email"
             type="email"
             label="Email"
             margin="normal"
+            disabled={!emailValified}
             {...register("email", {
               required: true,
               pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i,
             })}
           />
           <TextField
-            error={isError}
             fullWidth
             id="password"
             type="password"
@@ -132,7 +166,6 @@ export const UpdateProfile = () => {
             {...register("password", { minLength: 6 })}
           />
           <TextField
-            error={isError}
             fullWidth
             id="password-confirm"
             name="password-confirm"

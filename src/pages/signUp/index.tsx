@@ -8,9 +8,9 @@ import {
   TextField,
 } from "@mui/material";
 import { Controller } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 import { useHooks } from "./hooks";
-import { Link } from "react-router-dom";
 
 export const SignUp = () => {
   const {

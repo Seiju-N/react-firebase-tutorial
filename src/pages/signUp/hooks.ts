@@ -1,3 +1,4 @@
+import { FirebaseError } from "firebase/app";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -52,11 +53,11 @@ export const useHooks = () => {
     setMessage("");
     try {
       await signUp(data.email, data.passwordConfirm);
-      setMessage("アカウントの作成に成功しました");
+      setMessage("アカウント作成のメールを送信しました。");
     } catch (e) {
-      if (e instanceof Error) {
+      if (e instanceof FirebaseError) {
         console.log(e);
-        const errorCode = e.message as string;
+        const errorCode = e.code as string;
         setMessage(errorMessages[errorCode] || errorMessages.default);
       } else {
         // eがErrorオブジェクトでない場合の処理

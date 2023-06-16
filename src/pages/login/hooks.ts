@@ -1,3 +1,4 @@
+import { FirebaseError } from "firebase/app";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -52,12 +53,12 @@ export const useHooks = () => {
       setMessage("ログインに成功しました");
       navigate("/dashboard");
     } catch (e) {
-      if (e instanceof Error) {
+      if (e instanceof FirebaseError) {
         console.log(e);
-        const errorCode = e.message as string;
+        const errorCode = e.code as string;
         setMessage(errorMessages[errorCode] || errorMessages.default);
       } else {
-        console.error("An unknown error occurred:", e);
+        setMessage("メールアドレスの確認が取れていません。");
       }
     }
   };

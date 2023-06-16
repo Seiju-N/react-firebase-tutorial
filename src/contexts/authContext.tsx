@@ -12,7 +12,7 @@ export type AuthContextType = {
   login: (
     email: string,
     password: string
-  ) => Promise<firebase.auth.UserCredential>;
+  ) => Promise<firebase.auth.UserCredential | void>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
 };
@@ -40,12 +40,25 @@ type AuthProviderProps = {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<firebase.User | null>(null);
 
-  const signUp = (email: string, password: string) => {
-    return auth.createUserWithEmailAndPassword(email, password);
+  const signUp = async (email: string, password: string) => {
+    const userCredential = await auth.createUserWithEmailAndPassword(
+      email,
+      password
+    );
+    if (userCredential.user) {
+      await userCredential.user.sendEmailVerification();
+    }
+    return userCredential;
   };
 
-  const login = (email: string, password: string) => {
-    return auth.signInWithEmailAndPassword(email, password);
+  const login = async (email: string, password: string) => {
+    const userCredential = await auth.signInWithEmailAndPassword(
+      email,
+      password
+    );
+    if (userCredential.user && !userCredential.user.emailVerified) {
+      throw new Error("メールアドレスの確認が取れていません。");
+    }
   };
 
   const logout = () => {

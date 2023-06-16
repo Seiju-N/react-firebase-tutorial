@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Card,
   CardActions,
@@ -13,7 +12,7 @@ import { Link } from "react-router-dom";
 
 import { useHooks } from "./hooks";
 
-export const Login = () => {
+export const ForgotPassword = () => {
   const { message, onSubmit, handleSubmit, control, errors, isValid } =
     useHooks();
 
@@ -23,7 +22,7 @@ export const Login = () => {
         <Card sx={{ marginTop: 14 }}>
           <CardHeader
             sx={{ textAlign: "center", background: "#212121", color: "#fff" }}
-            title="Login"
+            title="ForgotPassword"
           />
           <CardContent>
             {message && <>{message}</>}
@@ -43,28 +42,7 @@ export const Login = () => {
                 />
               )}
             />
-            <Controller
-              name="password"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  error={!!errors.password}
-                  fullWidth
-                  id="password"
-                  type="password"
-                  label="Password"
-                  placeholder="Password"
-                  margin="normal"
-                />
-              )}
-            />
-            <Box>
-              アカウントが無い場合は<Link to="/signup">こちら</Link>
-            </Box>
-            <Box>
-              パスワードを忘れた場合は<Link to="/forgotPassword">こちら</Link>
-            </Box>
+            アカウントが無い場合は<Link to="/signup">こちら</Link>
           </CardContent>
           <CardActions>
             <Button
@@ -75,7 +53,7 @@ export const Login = () => {
               type="submit"
               disabled={!isValid}
             >
-              Login
+              ForgotPassword
             </Button>
           </CardActions>
         </Card>

@@ -14,6 +14,7 @@ export type AuthContextType = {
     password: string
   ) => Promise<firebase.auth.UserCredential>;
   logout: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -26,6 +27,9 @@ export const AuthContext = createContext<AuthContextType>({
   },
   logout: async () => {
     throw new Error("logout not implemented");
+  },
+  resetPassword: async () => {
+    throw new Error("resetPassword not implemented");
   },
 });
 
@@ -48,11 +52,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return auth.signOut();
   };
 
+  const resetPassword = (email: string) => {
+    const actionCodeSettings = {
+      url: "http://localhost:3000/?email=" + email,
+    };
+    return auth.sendPasswordResetEmail(email, actionCodeSettings);
+  };
+
   const value: AuthContextType = {
     currentUser,
     signUp,
     login,
     logout,
+    resetPassword,
   };
 
   useEffect(() => {

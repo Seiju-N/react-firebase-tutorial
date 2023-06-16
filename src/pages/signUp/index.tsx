@@ -10,10 +10,18 @@ import {
 import { Controller } from "react-hook-form";
 
 import { useHooks } from "./hooks";
+import { Link } from "react-router-dom";
 
 export const SignUp = () => {
-  const { message, onSubmit, handleSubmit, control, errors, isValid } =
-    useHooks();
+  const {
+    message,
+    onSubmit,
+    handleSubmit,
+    control,
+    errors,
+    isValid,
+    register,
+  } = useHooks();
 
   return (
     <Container maxWidth={"sm"}>
@@ -38,6 +46,11 @@ export const SignUp = () => {
                   label="Email"
                   placeholder="Email"
                   margin="normal"
+                  {...register("email", {
+                    required: true,
+                    pattern:
+                      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i,
+                  })}
                 />
               )}
             />
@@ -73,7 +86,7 @@ export const SignUp = () => {
                 />
               )}
             />
-            もしアカウントがあるなら Log In
+            もしアカウントがあるなら<Link to="/login">ログイン</Link>
           </CardContent>
           <CardActions>
             <Button

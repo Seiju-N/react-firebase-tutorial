@@ -5,6 +5,7 @@ import { Dashboard } from "./pages/dashboard";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { Home } from "./pages/home";
 import { Login } from "./pages/login";
+import { UpdateProfile } from "./pages/updateProfile";
 
 import { AuthProvider } from "@/contexts/authContext";
 import { SignUp } from "@/pages/signUp";
@@ -22,6 +23,14 @@ export const App = () => {
             element={
               <RequireAuth>
                 <Dashboard />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="updateProfile"
+            element={
+              <RequireAuth>
+                <UpdateProfile />
               </RequireAuth>
             }
           />

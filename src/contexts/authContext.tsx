@@ -15,6 +15,8 @@ export type AuthContextType = {
   ) => Promise<firebase.auth.UserCredential | void>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  updatePassword: (password: string) => Promise<void>;
+  updateEmail: (email: string) => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -30,6 +32,12 @@ export const AuthContext = createContext<AuthContextType>({
   },
   resetPassword: async () => {
     throw new Error("resetPassword not implemented");
+  },
+  updatePassword: async () => {
+    throw new Error("updatePassword not implemented");
+  },
+  updateEmail: async () => {
+    throw new Error("updateEmail not implemented");
   },
 });
 
@@ -67,9 +75,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const resetPassword = (email: string) => {
     const actionCodeSettings = {
-      url: "http://localhost:3000/?email=" + email,
+      url: `${import.meta.env.VITE_REACT_APP_MAIL}?email=${email}`,
     };
     return auth.sendPasswordResetEmail(email, actionCodeSettings);
+  };
+
+  const updatePassword = (password: string) => {
+    if (!currentUser) {
+      throw new Error("currentUser is null");
+    }
+    return currentUser.updatePassword(password);
+  };
+
+  const updateEmail = (email: string) => {
+    if (!currentUser) {
+      throw new Error("currentUser is null");
+    }
+    return currentUser.updateEmail(email);
   };
 
   const value: AuthContextType = {
@@ -78,6 +100,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     logout,
     resetPassword,
+    updatePassword,
+    updateEmail,
   };
 
   useEffect(() => {
